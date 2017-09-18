@@ -23,33 +23,39 @@
         width: 100%;
         padding: 5px;
         background: #272d31;
-        /* overflow-y: scroll; */
+        line-height: 1.2;
         overflow: auto;
-      }
-      #view div {
-        margin-bottom: 10px;
-        color: #eee;
-        letter-spacing: 0.1em;
-      }
+      }    
       #input {
-        height: 40px;
-        /* width: calc(100% - 34px); */
+        height: 40px;        
         width: 100%;
-        background: #1e2c35;
+        background: #1e2c35;        
+      }
+      #input, #view {
         font-size: 1.5em;
       }
       #doCalc {
         width: 30px;
         height: 40px;
       }
+      code {
+        height: 50px !important;
+        font-size: 1.5em;
+      }
+      .result {
+        position: absolute;
+        background: #30383D !important;
+      }
+      /* .ace_active-line {
+        background: #30383D !important;
+      } */
     </style>
   </head>
   
   <body>
-    <div id="view">
-    </div>
+    <div id="view"></div>
     <div id="controls">    
-      <input id="input" name="input" value="sqrt(144) + pi * (phi / e)">
+      <div id="input">sqrt(144) + pi * (phi / e)</div>
       <!-- <button id="doCalc">></button> -->
     </div>
   </body>
@@ -57,5 +63,6 @@
     var $ = require("./jquery-3.2.1.min.js");
     var math = require('./math.min.js');
     require('./calc.js');
+    require('./vendor/ace/ace.js');
   </script>
   </html>
