@@ -4,9 +4,9 @@ $(function(){
     $("#input").focus();
   });
 
-  $("#doCalc").click(function() {
-    crunch()    
-  })
+  // $("#doCalc").click(function() {
+  //   crunch()    
+  // })
   
   $(document).keypress(function(e) {
     if(e.which == 13) {
