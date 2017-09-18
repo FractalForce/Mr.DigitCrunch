@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <style>
+      html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+      }      
+      #view {
+        flex-grow: 1;
+        width: 100%;
+        border: 1px solid lightgray;
+      }
+      #input {
+        height: 40px;
+        width: calc(100% - 34px);
+      }
+      #doCalc {
+        width: 30px;
+        height: 40px;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="view">
+    </div>
+    <div id="controls">    
+      <input id="input" name="input" value="sqrt(144)">
+      <button id="doCalc">></button>
+    </div>
+  </body>
+  
+  </html>
