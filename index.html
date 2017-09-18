@@ -16,6 +16,10 @@
         width: 100%;
         border: 1px solid lightgray;
       }
+      #view div {
+        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+      }
       #input {
         height: 40px;
         width: calc(100% - 34px);
@@ -31,9 +35,13 @@
     <div id="view">
     </div>
     <div id="controls">    
-      <input id="input" name="input" value="sqrt(144)">
+      <input id="input" name="input" value="sqrt(144) + pi * (phi / e)">
       <button id="doCalc">></button>
     </div>
   </body>
-  
+  <script>
+    var $ = require("./jquery-3.2.1.min.js");
+    var math = require('./math.min.js');
+    require('./calc.js');
+  </script>
   </html>
