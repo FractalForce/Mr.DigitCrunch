@@ -3,10 +3,13 @@ let history = {
   currentIndex: 0,
   current: "",
   mostRecent: "",
+  temp: "freshTempura",
+  isPrev: false,
   add: function(expression){
-    if(expression != this.mostRecent) { //No immediate duplicate entries
+    if(expression != this.mostRecent && expression) { //No immediate duplicate entries
       this.entries.push(expression)
       this.mostRecent = expression
+      this.temp = ""
     }
     this.currentIndex = this.entries.length
   },
@@ -17,17 +20,20 @@ let history = {
     return this.entries.length ? this.entries[this.currentIndex] : ""
   },
   selectNewer: function(){
-    if(this.currentIndex < this.entries.length - 1)
-      this.currentIndex++
-    else if(this.currentIndex === this.entries.length)
-      return ""
-
+    //don't increment if last AND no temp value
+    if(this.currentIndex < this.entries.length){
+      this.currentIndex++          
+    }
+    if(this.currentIndex == this.entries.length) {
+      return this.temp
+    }
+         
     return this.entries.length ? this.entries[this.currentIndex] : ""
   }
 }
 
 let editor,
-    Range
+    Range    
 
 $(function(){
   Range = ace.require("ace/range").Range
@@ -44,8 +50,7 @@ $(function(){
     highlightGutterLine: false,
     selectionStyle: "text",
     showPrintMargin: false,
-    wrap: true,
-    maxLines: Infinity
+    wrap: true
   })
 
   editor = ace.edit("input")  
@@ -66,7 +71,7 @@ $(function(){
   //Automatically scrolling cursor into view after selection change this will be disabled 
   //in the next version set editor.$blockScrolling = Infinity to disable this message
   editor.$blockScrolling = Infinity
-  view.$blockScrolling = Infinity
+  view.$blockScrolling = false
 
   editor.commands.addCommand({
     name: 'doCalc',
@@ -80,9 +85,12 @@ $(function(){
   editor.commands.addCommand({
     name: 'older',
     bindKey: {win: 'up',  mac: 'up'},
-    exec: function(editor) {
+    exec: function(editor) {      
       let older = history.selectOlder()
-      if (history.selectOlder()) editor.setValue(older)
+      if (older){
+        history.isPrev = true
+        editor.setValue(older)
+      }
     },
     readOnly: true
   })
@@ -90,15 +98,42 @@ $(function(){
   editor.commands.addCommand({
     name: 'newer',
     bindKey: {win: 'down',  mac: 'down'},
-    exec: function(editor) {
+    exec: function(editor) {      
       let newer = history.selectNewer()
-      if (history.selectNewer()) editor.setValue(newer)
+      if (newer != "freshTempura"){
+        history.isPrev = true
+        editor.setValue(newer)
+      }
     },
     readOnly: true
-  })  
+  })
+
+  editor.getSession().on('change', function(e) {
+    if(editor.getValue()) {
+      if(!history.isPrev) {
+        history.temp = editor.getValue()
+        history.currentIndex = history.entries.length
+      }
+
+      history.isPrev = false
+
+      // console.log("-")
+      // console.log("isPrev: " + history.isPrev)
+      // console.log("temp: " + history.temp)
+      // console.log("i: " + history.currentIndex)
+      // console.log("len: " + history.entries.length)
+    } else {
+      if(!history.isPrev) {
+        history.temp = ""
+        history.currentIndex = history.entries.length
+      }
+    }
+  })
+
   
   $(document).keyup(function(e) {
     editor.focus()
+
     // switch(e.which) {
     //   case 13: // enter
     //     crunch()
@@ -111,7 +146,6 @@ $(function(){
 
     //   case 40: // down
     //     // $("#input").val(history.selectNewer())
-    //     console.log("balls")
     //     editor.setValue(history.selectNewer())
     //   break
 
@@ -127,7 +161,6 @@ function displayResult(result) {
 
   view.insert(entry)
 
-  // var Range = ace.require("ace/range").Range
   view.session.addMarker(new Range(view.session.getLength() - 1, 0, view.session.getLength() - 1, 1), "result", "fullLine") //ace_active-line
 }
 
