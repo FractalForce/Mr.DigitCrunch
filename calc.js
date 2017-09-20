@@ -5,8 +5,9 @@ let history = {
   mostRecent: "",
   temp: "freshTempura",
   isPrev: false,
+  scope: { ans: 0 },
   add: function(expression){
-    if(expression != this.mostRecent && expression) { //No immediate duplicate entries
+    if(expression != this.mostRecent && expression) {
       this.entries.push(expression)
       this.mostRecent = expression
       this.temp = ""
@@ -20,7 +21,6 @@ let history = {
     return this.entries.length ? this.entries[this.currentIndex] : ""
   },
   selectNewer: function(){
-    //don't increment if last AND no temp value
     if(this.currentIndex < this.entries.length){
       this.currentIndex++          
     }
@@ -109,10 +109,17 @@ $(function(){
   })
 
   editor.getSession().on('change', function(e) {
-    if(editor.getValue()) {
+    let ans = editor.getValue()
+    if(ans) {
       if(!history.isPrev) {
-        history.temp = editor.getValue()
+        history.temp = ans
         history.currentIndex = history.entries.length
+      }
+
+      let operators = "+-*/%^"
+      if (ans.length == 1 && history.scope.ans && operators.indexOf(ans) > -1){
+        editor.setValue("ans " + ans + " ")
+        editor.execCommand("gotolineend")
       }
 
       history.isPrev = false
@@ -169,7 +176,7 @@ function crunch() {
       result
 
   try {
-    result = math.eval(expression)
+    result = math.eval(expression, history.scope)
   } catch (e) {
     // if (e instanceof SyntaxError) {
     //   alert(e.message)
@@ -181,6 +188,7 @@ function crunch() {
     displayResult(result)
     editor.setValue("")    
     history.add(expression)
+    history.scope.ans = result;
     // $('#view').scrollTop(d.prop("scrollHeight"))
   }
 }

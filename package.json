@@ -1,5 +1,5 @@
 {
-  "name": "calculated",
+  "name": "Mr.DigitCrunch",
   "version": "1.0.0",
   "description": "A simple calculator of might and power",
   "main": "main.js",
@@ -16,6 +16,6 @@
     "electron-builder": "^19.27.7"
   },
   "build": {
-    "appId": "calculatedid"
+    "appId": "Mr.DigitCrunch_id"
   }
 }
