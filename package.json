@@ -10,10 +10,10 @@
   "author": "Grand Ultimate",
   "license": "ISC",
   "dependencies": {
-    
+    "npm": "^5.8.0"
   },
   "devDependencies": {
-    "electron-builder": "^19.27.7"
+    "electron-builder": "^19.56.2"
   },
   "build": {
     "appId": "Mr.DigitCrunch_id"
